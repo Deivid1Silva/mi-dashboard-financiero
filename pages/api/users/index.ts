@@ -1,5 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "@/lib/prisma";
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { prisma } from '@/lib/prisma';
 
 /**
  * @swagger
@@ -42,30 +42,40 @@ import { prisma } from "@/lib/prisma";
  * 200:
  * description: Usuario eliminado
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   // ... resto de tu lógica de Prisma ...
   try {
     switch (req.method) {
-      case "GET":
-        const users = await prisma.user.findMany({ orderBy: { createdAt: "desc" } });
+      case 'GET':
+        const users = await prisma.user.findMany({
+          orderBy: { createdAt: 'desc' },
+        });
         return res.status(200).json({ data: users });
-      case "POST":
+      case 'POST':
         const { name, email, role } = req.body;
-        const newUser = await prisma.user.create({ data: { name, email, role: role || "ADMIN", updatedAt: new Date() } });
+        const newUser = await prisma.user.create({
+          data: { name, email, role: role || 'ADMIN', updatedAt: new Date() },
+        });
         return res.status(201).json({ data: newUser });
-      case "PATCH":
+      case 'PATCH':
         const { id, role: newRole } = req.body;
-        const updatedUser = await prisma.user.update({ where: { id }, data: { role: newRole, updatedAt: new Date() } });
+        const updatedUser = await prisma.user.update({
+          where: { id },
+          data: { role: newRole, updatedAt: new Date() },
+        });
         return res.status(200).json({ data: updatedUser });
-      case "DELETE":
+      case 'DELETE':
         const userId = req.query.id as string;
         await prisma.user.delete({ where: { id: userId } });
-        return res.status(200).json({ message: "Usuario eliminado" });
+        return res.status(200).json({ message: 'Usuario eliminado' });
       default:
-        res.setHeader("Allow", ["GET", "POST", "PATCH", "DELETE"]);
+        res.setHeader('Allow', ['GET', 'POST', 'PATCH', 'DELETE']);
         return res.status(405).end();
     }
   } catch (error) {
-    res.status(500).json({ error: "Error con Prisma" });
+    res.status(500).json({ error: 'Error con Prisma' });
   }
 }

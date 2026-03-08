@@ -1,5 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../lib/prisma";
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { prisma } from '../../../lib/prisma';
 
 /**
  * @swagger
@@ -20,29 +20,32 @@ import { prisma } from "../../../lib/prisma";
  * 403:
  * description: No autorizado
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const userRole = req.headers["x-user-role"];
-  if (!userRole || userRole !== "ADMIN") {
-    return res.status(403).json({ message: "Unauthorized" });
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const userRole = req.headers['x-user-role'];
+  if (!userRole || userRole !== 'ADMIN') {
+    return res.status(403).json({ message: 'Unauthorized' });
   }
 
-  if (req.method === "GET") {
+  if (req.method === 'GET') {
     try {
       const movements = await prisma.movement.findMany({
         include: { user: true },
-        orderBy: { date: "desc" },
+        orderBy: { date: 'desc' },
       });
 
       const balance = movements.reduce(
-        (acc, m) => (m.type === "INCOME" ? acc + m.amount : acc - m.amount),
+        (acc, m) => (m.type === 'INCOME' ? acc + m.amount : acc - m.amount),
         0
       );
 
       return res.status(200).json({ movements, balance });
     } catch (error) {
-      return res.status(500).json({ message: "Internal Server Error" });
+      return res.status(500).json({ message: 'Internal Server Error' });
     }
   }
-  res.setHeader("Allow", ["GET"]);
+  res.setHeader('Allow', ['GET']);
   res.status(405).end(`Method ${req.method} Not Allowed`);
 }

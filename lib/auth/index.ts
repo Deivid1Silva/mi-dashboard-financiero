@@ -1,4 +1,4 @@
-import { betterAuth } from 'better-auth'; 
+import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { prisma } from '@/lib/prisma';
 
@@ -10,15 +10,15 @@ export const auth = betterAuth({
   user: {
     additionalFields: {
       role: {
-        type: "string",
+        type: 'string',
         required: false,
-        defaultValue: "ADMIN",
+        defaultValue: 'ADMIN',
         input: false, // Evita que se pueda enviar desde el cliente en el registro
       },
       phone: {
-        type: "string",
+        type: 'string',
         required: false,
-      }
+      },
     },
   },
   socialProviders: {
@@ -32,6 +32,6 @@ export const auth = betterAuth({
     cookieCache: {
       enabled: true,
       maxAge: 5 * 60,
-    }
-  }
+    },
+  },
 });
