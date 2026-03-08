@@ -13,10 +13,15 @@ export default function Home() {
   }, [session, router]);
 
   const handleLogin = async () => {
-    await authClient.signIn.social({
-      provider: 'github',
-      callbackURL: '/dashboard',
-    });
+    try {
+      await authClient.signIn.social({
+        provider: 'github',
+        // Usamos la URL completa para evitar errores de redirección
+        callbackURL: `${window.location.origin}/dashboard`,
+      });
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+    }
   };
 
   if (isPending) return (

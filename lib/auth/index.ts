@@ -6,14 +6,15 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),
-  // Definimos explícitamente el esquema para que el plugin de tipos lo detecte
+  // URL base necesaria para el flujo de autenticación
+  baseURL: process.env.BETTER_AUTH_URL,
   user: {
     additionalFields: {
       role: {
         type: 'string',
         required: false,
         defaultValue: 'ADMIN',
-        input: false, // Evita que se pueda enviar desde el cliente en el registro
+        input: false,
       },
       phone: {
         type: 'string',
@@ -27,7 +28,6 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     },
   },
-  // Esto asegura que la sesión devuelva el rol al frontend
   session: {
     cookieCache: {
       enabled: true,
