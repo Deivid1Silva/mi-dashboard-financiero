@@ -7,9 +7,14 @@ const options = {
     info: {
       title: 'Mestizo Cacao API 🍫',
       version: '1.0.0',
-      description: 'Documentación oficial de los endpoints.',
+      description: 'Documentación oficial para la gestión del taller.',
     },
-    servers: [{ url: 'http://localhost:3000' }],
+    servers: [
+      { 
+        // Esto detecta si estás en local o en Vercel automáticamente
+        url: process.env.NEXT_PUBLIC_BETTER_AUTH_URL || 'http://localhost:3000' 
+      }
+    ],
     paths: {
       '/api/movements': {
         get: {
@@ -30,16 +35,9 @@ const options = {
           responses: { 200: { description: 'Éxito' } },
         },
       },
-      '/api/reports': {
-        get: {
-          tags: ['Reports'],
-          summary: 'Ver balance (ADMIN)',
-          responses: { 200: { description: 'Éxito' } },
-        },
-      },
     },
   },
-  apis: [], // Dejamos esto vacío para que NO lea los archivos con errores
+  apis: [],
 };
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -47,6 +45,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     const spec = swaggerJsdoc(options);
     res.status(200).json(spec);
   } catch (error) {
-    res.status(500).json({ error: 'Error en Docs' });
+    res.status(500).json({ error: 'Error en generación de Docs' });
   }
 }
