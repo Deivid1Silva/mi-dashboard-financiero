@@ -1,31 +1,35 @@
-import { betterAuth } from 'better-auth';
-import { prismaAdapter } from 'better-auth/adapters/prisma';
-import { prisma } from '@/lib/prisma';
+import { betterAuth } from "better-auth";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import { prisma } from "@/lib/prisma";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
-    provider: 'postgresql',
+    provider: "postgresql",
   }),
-  // El secreto es obligatorio para firmar las cookies
+
   secret: process.env.BETTER_AUTH_SECRET,
-  baseURL: process.env.BETTER_AUTH_URL,
+
+  baseURL:
+    process.env.BETTER_AUTH_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : ""),
+
   trustedOrigins: [
     process.env.BETTER_AUTH_URL as string,
-    // Permite cualquier subdominio de Vercel de tu proyecto
-    "https://mi-dashboard-financiero-*.vercel.app"
   ],
+
   user: {
     additionalFields: {
       role: {
-        type: 'string',
-        defaultValue: 'ADMIN',
+        type: "string",
+        defaultValue: "ADMIN",
       },
       phone: {
-        type: 'string',
+        type: "string",
         required: false,
       },
     },
   },
+
   socialProviders: {
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,

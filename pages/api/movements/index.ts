@@ -37,25 +37,23 @@ import { fromNodeHeaders } from 'better-auth/node';
  * 500:
  * description: Error de servidor
  */
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  // Validación de sesión optimizada
   const session = await auth.api.getSession({
     headers: fromNodeHeaders(req.headers),
   });
 
   if (!session) {
-    return res
-      .status(401)
-      .json({ error: 'No autorizado: Inicia sesión de nuevo' });
+    return res.status(401).json({ error: 'No autorizado' });
   }
 
   if (req.method === 'GET') {
     try {
       const movements = await prisma.movement.findMany({
-        where: { userId: session.user.id },
+        // El administrador ve todo, el usuario solo lo suyo
+        where: session.user.role === 'ADMIN' ? {} : { userId: session.user.id },
         orderBy: { date: 'desc' },
+        include: { user: { select: { name: true } } } // Incluimos el nombre del usuario para la tabla
       });
       return res.status(200).json({ data: movements });
     } catch (e) {
@@ -64,6 +62,11 @@ export default async function handler(
   }
 
   if (req.method === 'POST') {
+    // Protección RBAC: Solo ADMIN puede agregar movimientos según el requerimiento
+    if (session.user.role !== 'ADMIN') {
+      return res.status(403).json({ error: 'Solo administradores pueden agregar movimientos' });
+    }
+
     const { concept, amount, type } = req.body;
     try {
       const movement = await prisma.movement.create({
