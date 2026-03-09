@@ -13,15 +13,14 @@ model User {
   email         String     @unique
   emailVerified Boolean    @default(false)
   image         String?
-  role          String     @default("ADMIN") // Campo requerido por tu lógica
+  role          String     @default("ADMIN")
   phone         String?
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
   
-  // Relaciones
-  accounts  Account[]
-  sessions  Session[]
-  movements Movement[]
+  accounts      Account[]
+  sessions      Session[]
+  movements     Movement[]
 
   @@map("user")
 }
@@ -31,7 +30,7 @@ model Session {
   expiresAt DateTime
   token     String   @unique
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt // Añadido @updatedAt
+  updatedAt DateTime @updatedAt
   ipAddress String?
   userAgent String?
   userId    String
@@ -54,7 +53,7 @@ model Account {
   scope                 String?
   password              String?
   createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt // Añadido @updatedAt
+  updatedAt             DateTime  @updatedAt
 
   @@map("account")
 }
@@ -65,7 +64,7 @@ model Verification {
   value      String
   expiresAt  DateTime
   createdAt  DateTime? @default(now())
-  updatedAt  DateTime? @updatedAt // Añadido @updatedAt
+  updatedAt  DateTime? @updatedAt
 
   @@map("verification")
 }
@@ -85,5 +84,5 @@ model Movement {
   user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime     @default(now())
 
-  @@map("movement") // Añadido para mantener consistencia con las otras tablas
+  @@map("movement")
 }

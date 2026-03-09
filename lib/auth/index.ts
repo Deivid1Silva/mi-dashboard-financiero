@@ -6,6 +6,7 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),
+  secret: process.env.BETTER_AUTH_SECRET,
   baseURL: process.env.BETTER_AUTH_URL,
   user: {
     additionalFields: {
@@ -13,7 +14,6 @@ export const auth = betterAuth({
         type: 'string',
         required: false,
         defaultValue: 'ADMIN',
-        input: false,
       },
       phone: {
         type: 'string',
@@ -26,6 +26,9 @@ export const auth = betterAuth({
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     },
+  },
+  advanced: {
+    cookiePrefix: "mi-dashboard",
   },
   session: {
     cookieCache: {
