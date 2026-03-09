@@ -16,11 +16,11 @@ export default function Home() {
     try {
       await authClient.signIn.social({
         provider: 'github',
-        // Usamos la URL completa para evitar errores de redirección
-        callbackURL: `${window.location.origin}/dashboard`,
+        callbackURL: '/dashboard',
       });
     } catch (error) {
-      console.error("Error al iniciar sesión:", error);
+      console.error("Error detallado al iniciar sesión:", error);
+      alert("Hubo un problema al conectar con GitHub. Revisa la consola.");
     }
   };
 
@@ -46,4 +46,3 @@ export default function Home() {
     </div>
   );
 }
-// Reinicio de despliegue. <-- Mueve el comentario aquí (o bórralo)
