@@ -6,10 +6,13 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),
-  // Esto permite que las URLs de previsualización de Vercel funcionen
+  // El secreto es obligatorio para firmar las cookies
+  secret: process.env.BETTER_AUTH_SECRET,
+  baseURL: process.env.BETTER_AUTH_URL,
   trustedOrigins: [
     process.env.BETTER_AUTH_URL as string,
-    "https://mi-dashboard-financiero-cmw5c3tgq-deivid1silvas-projects.vercel.app" 
+    // Permite cualquier subdominio de Vercel de tu proyecto
+    "https://mi-dashboard-financiero-*.vercel.app"
   ],
   user: {
     additionalFields: {

@@ -1,11 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,
+  transpilePackages: ['better-auth'], // Ayuda con el error de 'export'
   eslint: {
-    // Esto ignora los errores de linting para que el despliegue no falle
     ignoreDuringBuilds: true,
   },
   typescript: {
-    // Esto ignora errores de tipos (como los 'any') durante el despliegue
     ignoreBuildErrors: true,
   },
 };
