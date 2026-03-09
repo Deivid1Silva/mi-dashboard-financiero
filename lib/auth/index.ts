@@ -6,13 +6,15 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),
-  secret: process.env.BETTER_AUTH_SECRET,
-  baseURL: process.env.BETTER_AUTH_URL,
+  // Esto permite que las URLs de previsualización de Vercel funcionen
+  trustedOrigins: [
+    process.env.BETTER_AUTH_URL as string,
+    "https://mi-dashboard-financiero-cmw5c3tgq-deivid1silvas-projects.vercel.app" 
+  ],
   user: {
     additionalFields: {
       role: {
         type: 'string',
-        required: false,
         defaultValue: 'ADMIN',
       },
       phone: {
@@ -25,15 +27,6 @@ export const auth = betterAuth({
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-    },
-  },
-  advanced: {
-    cookiePrefix: "mi-dashboard",
-  },
-  session: {
-    cookieCache: {
-      enabled: true,
-      maxAge: 5 * 60,
     },
   },
 });
