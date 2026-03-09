@@ -46,4 +46,4 @@ export default function Home() {
     </div>
   );
 }
-}// Reinicio de despliegue.
+// Reinicio de despliegue. <-- Mueve el comentario aquí (o bórralo)
